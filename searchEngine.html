@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baddy Search</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://w0.peakpx.com/wallpaper/18/755/HD-wallpaper-landing-page-of-seo-search-engine-optimization-modern-flat-design-isometric-template-conceptual-seo-analysis-and-optimization-seo-strategies-and-marketing-concept-vector-illustration-for-web-site-5579737.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.8em;
+            color: #333;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 14px 24px;
+            border: 2px solid #ccc;
+            border-right: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 18px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        }
+        #search-button {
+            padding: 14px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #search-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+        .search-history h3 {
+            color: #333;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        #search-history-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #search-history-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        #search-history-list li:hover {
+            background-color: #f9f9f9;
+        }
+        .delete-button, #clear-history-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .delete-button:hover, #clear-history-button:hover {
+            background-color: #d32f2f;
+            transform: scale(1.05);
+        }
+        #clear-history-button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            background-color: #f44336;
+            font-size: 16px;
+        }
+        #clear-history-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Baddy Search</h1>
+            </div>
+            <div class="card-body">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Enter thing to search for">
+                    <button id="search-button">🔍 Search</button>
+                </div>
+                <div class="search-history">
+                    <h3>Search History</h3>
+                    <ul id="search-history-list"></ul>
+                    <button id="clear-history-button">Clear History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchHistoryList = document.getElementById('search-history-list');
+        const clearHistoryButton = document.getElementById('clear-history-button');
+
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+        function displaySearchHistory() {
+            searchHistoryList.innerHTML = '';
+            searchHistory.forEach((searchTerm, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = searchTerm;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.className = 'delete-button';
+                deleteButton.onclick = () => deleteSearchTerm(index);
+
+                listItem.appendChild(deleteButton);
+                searchHistoryList.appendChild(listItem);
+            });
+        }
+
+        function addSearchTermToHistory(searchTerm) {
+            searchHistory.push(searchTerm);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            displaySearchHistory();
+        }
+
+        function deleteSearchTerm(index) {
+            searchHistory.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            displaySearchHistory();
+        }
+
+        function clearSearchHistory() {
+            searchHistory = [];
+            localStorage.removeItem('searchHistory');
+            displaySearchHistory();
+        }
+
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                addSearchTermToHistory(searchTerm);
+                searchInput.value = '';
+            }
+        });
+
+        clearHistoryButton.addEventListener('click', clearSearchHistory);
+
+        displaySearchHistory();
+    </script>
+</body>
+</html>
